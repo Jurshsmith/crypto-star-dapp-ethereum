@@ -49,7 +49,7 @@ contract StarNotary is ERC721 {
         uint256 starCost = starsForSale[_tokenId];
         address ownerAddress = ownerOf(_tokenId);
         require(msg.value > starCost, "You need to have enough Ether");
-        transferFrom(ownerAddress, msg.sender, _tokenId); // We can't use _addTokenTo or_removeTokenFrom functions, now we have to use transferFrom
+        _transferFrom(ownerAddress, msg.sender, _tokenId); // We can't use _addTokenTo or_removeTokenFrom functions, now we have to use _transferFrom
         address payable ownerAddressPayable = _make_payable(ownerAddress); // We need to make this conversion to be able to use transfer() function to transfer ethers
         ownerAddressPayable.transfer(starCost);
         if(msg.value > starCost) {
@@ -68,19 +68,20 @@ contract StarNotary is ERC721 {
         //1. Passing to star tokenId you will need to check if the owner of _tokenId1 or _tokenId2 is the sender
         //2. You don't have to check for the price of the token (star)
         //3. Get the owner of the two tokens (ownerOf(_tokenId1), ownerOf(_tokenId1)
-        //4. Use transferFrom function to exchange the tokens.
+        //4. Use _transferFrom function to exchange the tokens.
         address owner1 = ownerOf(_tokenId1);
         address owner2 = ownerOf(_tokenId2);
         require(owner1 == msg.sender || owner2 == msg.sender, "Forbidden: Can't exchange stars you don't own.");
-        transferFrom(owner1, owner2, _tokenId1);
+        _transferFrom(owner1, owner2, _tokenId1);
+        _transferFrom(owner2, owner1, _tokenId2);
     }
 
     // Implement Task 1 Transfer Stars
     function transferStar(address _to1, uint256 _tokenId) public {
         //1. Check if the sender is the ownerOf(_tokenId)
-        require(msg.sender == ownerOf(_tokenId), "You can't transfer the star you don't own.");
-        //2. Use the transferFrom(from, to, tokenId); function to transfer the Star
-        transferFrom(msg.sender, _to1, _tokenId);
+        require(msg.sender == ownerOf(_tokenId), "You can't transfer stars you don't own.");
+        //2. Use the _transferFrom(from, to, tokenId); function to transfer the Star
+        _transferFrom(msg.sender, _to1, _tokenId);
     }
 
 }

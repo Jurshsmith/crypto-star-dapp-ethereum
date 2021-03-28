@@ -27,7 +27,7 @@
 require("dotenv").config();
 const infuraKey = process.env.INFURA_KEY;
 const mnemonic = process.env.MNEMONIC;
- 
+
  module.exports = {
    /**
     * Networks define how you connect to your ethereum client and let you set the
